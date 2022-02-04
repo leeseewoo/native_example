@@ -6,8 +6,6 @@ import 'package:flutter/services.dart';
 import 'sendDataExample.dart';
 
 
-
-
 void main() {
   runApp(MyApp());
 }
@@ -28,7 +26,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: SendDataExample(),
+        home: NativeApp(),
       );
     }
   }
@@ -39,9 +37,18 @@ class NativeApp extends StatefulWidget {
   State<StatefulWidget> createState() => _NativeApp();
 }
 
-class _NativeApp extends State<NativeApp>{
+class _NativeApp extends State<NativeApp> {
   static const platform = const MethodChannel('com.flutter.dev/info');
   String _deviceInfo = 'Unknown info';
+  static const platform3 = const MethodChannel('com.flutter.dev/dialog');
+
+  Future<void> _showDialog() async {
+    try {
+      await platform3.invokeMethod('showDialog');
+    } on PlatformException catch (e) {
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +59,18 @@ class _NativeApp extends State<NativeApp>{
       ),
       body: Container(
         child: Center(
-          child: Text(
-            _deviceInfo,
-            style: TextStyle(fontSize: 30),
+          child: Column(
+            children: [
+              Text(
+                _deviceInfo,
+                style: TextStyle(fontSize: 30),
+              ),
+              TextButton(
+                  onPressed: () {
+                    _showDialog();
+                  },
+                  child: Text('네이티브 창 열기'))
+            ],
           ),
         ),
       ),
@@ -87,7 +103,6 @@ class CupertinoNativeApp extends StatefulWidget {
     return _NativeApp();
   }
 }
-
 
 
 class MyHomePage extends StatefulWidget {
@@ -161,7 +176,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline4,
             ),
           ],
         ),
